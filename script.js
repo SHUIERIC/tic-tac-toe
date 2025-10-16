@@ -73,9 +73,13 @@ function GameController (playerOne, playerTwo) {
 
         board.putToken(row, column, getActivePlayer().token)
 
-        //add check to winning conditon here
-        //add winnign message 
-
+        //call winning function to check for win conditions
+        const winner = winning ();
+        if (winner) {
+            console.log(`${winner.name} wins!`);
+            return
+        }
+        
         switchPlayer();
         printNewRound()
     }
@@ -89,5 +93,32 @@ function GameController (playerOne, playerTwo) {
 
 }
 
-const game = GameController("Alice", "Bob");
+//winning logic 
+    const winning = () => {
+        currentBoard = board.getBoard();
+       
+        //check row winner
+        for (let i=0; i<3; i++) {
+        const rowValues = currentBoard[i].map(cell => cell.getValue())
+        if (rowValues.every(value => value === players[0].token)) {
+            return players[0]
+        }
+        if (rowValues.every(value => value === players[1].token)) {
+            return players[1]
+        }
+        }
 
+        //check column winner
+        for (let j=0; j<3; j++) {
+            const columnValues = currentBoard.map(row => row[j].getValue());
+        if (columnValues.every(value => value === players[0].token)) {
+            return players[0]
+        }
+        if (columnValues.every(value => value === players[1].token)) {
+            return players[1]
+        }
+    
+    }
+}
+
+const game = GameController("Alice", "Bob")
