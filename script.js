@@ -1,4 +1,4 @@
-//game board 
+//game board
 function Gameboard () {
     const row =3;
     const column = 3; 
@@ -13,6 +13,7 @@ function Gameboard () {
 
     const getBoard = () => board
 
+    // function to put a token in a specific cell
     const putToken = (row, column, player) => {
         if (row < 0 || row > 2 || column < 0 || column > 2) return;
         if (board[row][column].getValue() !== 0 ) return;
@@ -29,9 +30,64 @@ function Gameboard () {
     return {getBoard, putToken, printBoard}
 }
 
+// cell
+function Cell () {
+    let value =0; 
 
-// to get value of cell 
-getValue ()
+    //function to put a token
+    const addToken = (player) => {
+        value = player
+    }
 
-// to add player token 1 or 2 into cell
-addToken ()
+    //return value of a cell
+    const getValue = () => value;
+
+    return {addToken, getValue}
+} 
+
+// game logic 
+function GameController (playerOne, playerTwo) {
+    
+    const board = Gameboard();
+
+    const players = [
+        {name: playerOne, token: 1},
+        {name: playerTwo, token: 2}
+    ]
+
+    let activePlayer = players[0];
+
+    const switchPlayer = () => {
+        activePlayer = activePlayer === players[0] ? players[1] : players[0]
+    }
+
+    const getActivePlayer = () => activePlayer;
+
+    const printNewRound = () => {
+        board.printBoard();
+        console.log(`${getActivePlayer().name}'s turn'`)
+    }
+
+    const playRound = (row, column) => {
+        console.log (`Dropping ${getActivePlayer().name}'s token into row${row} and column${column}`)
+
+        board.putToken(row, column, getActivePlayer().token)
+
+        //add check to winning conditon here
+        //add winnign message 
+
+        switchPlayer();
+        printNewRound()
+    }
+
+    printNewRound();
+
+    return {playRound, 
+            getActivePlayer, 
+            getBoard: board.getBoard
+        }
+
+}
+
+const game = GameController("Alice", "Bob");
+
