@@ -145,9 +145,51 @@ function GameController (playerOne, playerTwo) {
 
 // Display controller
 function DisplayController (){
-    const game = GameController;
-    
+    const game = GameController();
+    const turnDiv = document.querySelector(".turn");
+    const boardDiv = document.querySelector(".board")
+
+     
+    const updateScreen = () => {
+        boardDiv.textContent = "";
+
+        const board = game.getBoard();
+        const activePlayer = game.getActivePlayer();
+
+        turnDiv.textContent = `${activePlayer.name}'s turn`
+
+        board.forEach ((row, rowIndex) => {
+            row.forEach((cell, columnIndex) => {
+                const cellButton = document.createElement("button");
+                cellButton.classList.add("cell");
+                
+                cellButton.dataset.column = columnIndex;
+                cellButton.dataset.row = rowIndex
+
+                cellButton.textContent=cell.getValue();
+                boardDiv.appendChild(cellButton)
+            })
+        }
+        )
+    }
+
+    //event listner for game board
+    function clickBoard (e) {
+        const selectedColumn = e.target.dataset.column;
+        const selectedRow = e.target.dataset.row;
+
+        if (!selectedColumn || !selectedRow) return;
+
+        game.playRound(selectedRow, selectedColumn);
+        updateScreen()
+    }
+
+    boardDiv.addEventListener("click", clickBoard)
+
+    //inital display 
+    updateScreen()
 }
 
+// default function call to start 
+DisplayController()
 
-const game = GameController("Alice", "Bob")
