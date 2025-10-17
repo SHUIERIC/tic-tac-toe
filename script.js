@@ -77,17 +77,16 @@ function GameController (playerOne, playerTwo) {
         const winner = winning ();
         
         if (winner == "tie") {
-            console.log ("It is a tie");
-            return
+            return {tie: true};
         }
         
         if (winner) {
-            console.log(`${winner.name} wins!`);
-            return
+            return {winner: winner.name};
         }
 
         switchPlayer();
-        printNewRound()
+        printNewRound();
+        console.log (winner)
     }
 
     //winning logic 
@@ -145,9 +144,10 @@ function GameController (playerOne, playerTwo) {
 
 // Display controller
 function DisplayController (){
-    const game = GameController();
+    let game = GameController();
     const turnDiv = document.querySelector(".turn");
     const boardDiv = document.querySelector(".board")
+    const form = document.getElementById("playerForm")
 
      
     const updateScreen = () => {
@@ -169,27 +169,48 @@ function DisplayController (){
                 cellButton.textContent=cell.getValue();
                 boardDiv.appendChild(cellButton)
             })
-        }
-        )
+        })
+
+
     }
 
-    //event listner for game board
+    // event listner for submitting names 
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        playerOneName = document.getElementById("player1").value;
+        playerTwoName = document.getElementById("player2").value;
+
+        game = GameController(playerOneName, playerTwoName);
+        updateScreen()
+
+        form.style.display = "none"
+    }) 
+
+    //event listner for clicking game board
     function clickBoard (e) {
         const selectedColumn = e.target.dataset.column;
         const selectedRow = e.target.dataset.row;
 
-        if (!selectedColumn || !selectedRow) return;
+        if (selectedColumn === undefined|| selectedRow === undefined) return;
 
-        game.playRound(selectedRow, selectedColumn);
-        updateScreen()
+        const result = game.playRound(selectedRow, selectedColumn);
+
+        updateScreen();
+
+        if (result && result.winner) {
+            turnDiv.textContent=`${result.winner} wins!`
+        } else if (result && result.tie) {
+            turnDiv.textContent= "It is a tie!"
+        }
     }
 
     boardDiv.addEventListener("click", clickBoard)
 
     //inital display 
-    updateScreen()
+    updateScreen();
 }
 
-// default function call to start 
+// default status on start  
 DisplayController()
 
