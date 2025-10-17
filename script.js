@@ -30,7 +30,7 @@ function Gameboard () {
     return {getBoard, putToken, printBoard}
 }
 
-// cell
+// cell value 
 function Cell () {
     let value =0; 
 
@@ -75,25 +75,22 @@ function GameController (playerOne, playerTwo) {
 
         //call winning function to check for win conditions
         const winner = winning ();
+        
+        if (winner == "tie") {
+            console.log ("It is a tie");
+            return
+        }
+        
         if (winner) {
             console.log(`${winner.name} wins!`);
             return
         }
-        
+
         switchPlayer();
         printNewRound()
     }
 
-    printNewRound();
-
-    return {playRound, 
-            getActivePlayer, 
-            getBoard: board.getBoard
-        }
-
-}
-
-//winning logic 
+    //winning logic 
     const winning = () => {
         currentBoard = board.getBoard();
        
@@ -117,8 +114,40 @@ function GameController (playerOne, playerTwo) {
         if (columnValues.every(value => value === players[1].token)) {
             return players[1]
         }
-    
-    }
+        }
+
+        //check diagnol winner 
+        const diagonalOne = [currentBoard[0][0], currentBoard[1][1], currentBoard[2][2]].map(cell => cell.getValue());
+        const diagonalTwo = [currentBoard[0][2], currentBoard[1][1], currentBoard[2][0]].map(cell => cell.getValue())
+
+        if (diagonalOne.every(value => value === players[0].token)) {return players[0]};
+        if (diagonalTwo.every(value => value === players[0].token)) {return players[0]};
+        if (diagonalOne.every(value => value === players[1].token)) {return players[1]};
+        if (diagonalTwo.every(value => value === players[1].token)) {return players[1]};
+
+        //check for ties when all cells are filled 
+        const allFilled = currentBoard
+            .flat()
+            .every (cell => cell.getValue() !== 0)
+        
+        if (allFilled) {return "tie"}
+    }   
+
+    //default starting status 
+    printNewRound();
+
+    return {playRound, 
+            getActivePlayer, 
+            getBoard: board.getBoard
+        }
+
 }
+
+// Display controller
+function DisplayController (){
+    const game = GameController;
+    
+}
+
 
 const game = GameController("Alice", "Bob")
