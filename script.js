@@ -18,10 +18,10 @@ function Gameboard () {
         if (row < 0 || row > 2 || column < 0 || column > 2) return;
         if (board[row][column].getValue() !== 0 ) return;
         
-        {board[row][column].addToken(player)
-    }
+        board[row][column].addToken(player)
     }
 
+    //display board in console
     const printBoard = () => {
         const boardWithCellValues = board.map ((row) => row.map((Cell) => Cell.getValue()));
         console.log(boardWithCellValues)
@@ -74,11 +74,13 @@ function GameController (playerOne, playerTwo) {
 
     const getActivePlayer = () => activePlayer;
 
+    // for console display of new round
     const printNewRound = () => {
         board.printBoard();
         console.log(`${getActivePlayer().name}'s turn'`)
     }
 
+    // playing 1 round by placing 1 token 
     const playRound = (row, column) => {
         console.log (`Dropping ${getActivePlayer().name}'s token into row${row} and column${column}`)
 
@@ -102,7 +104,7 @@ function GameController (playerOne, playerTwo) {
 
     //winning logic 
     const winning = () => {
-        currentBoard = board.getBoard();
+        const currentBoard = board.getBoard();
        
         //check row winner
         for (let i=0; i<3; i++) {
@@ -164,7 +166,7 @@ function GameController (playerOne, playerTwo) {
 }
 
 // Display controller
-function DisplayController (){
+const DisplayController = (function() {
     let game = GameController();
     const turnDiv = document.querySelector(".turn");
     const boardDiv = document.querySelector(".board")
@@ -192,7 +194,7 @@ function DisplayController (){
                 cellButton.dataset.column = columnIndex;
                 cellButton.dataset.row = rowIndex
 
-                cellButton.textContent=cell.getValue();
+                cellButton.textContent=cell.getValue() === 0 ? "" : cell.getValue();
                 boardDiv.appendChild(cellButton)
             })
         })
@@ -203,7 +205,7 @@ function DisplayController (){
     // event listner for name submisison, game start and reset
     form.addEventListener("submit", (e) => {
         e.preventDefault();
-        let gameStarted;
+        let gameStarted = false;
         
         if (!gameStarted) {
 
@@ -248,8 +250,7 @@ function DisplayController (){
 
     //inital display 
     updateScreen();
-}
+})()
 
-// default status on start  
-DisplayController()
+
 
