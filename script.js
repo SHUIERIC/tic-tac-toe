@@ -169,7 +169,7 @@ function DisplayController (){
     const turnDiv = document.querySelector(".turn");
     const boardDiv = document.querySelector(".board")
     const form = document.getElementById("playerForm")
-    const resetBtn = document.querySelector(".resetBtn")
+    const Btn = document.querySelector("#start-reset") 
 
      
     const updateScreen = () => {
@@ -200,19 +200,30 @@ function DisplayController (){
 
     }
 
-    // event listner for submitting names 
+    // event listner for name submisison, game start and reset
     form.addEventListener("submit", (e) => {
         e.preventDefault();
+        let gameStarted;
+        
+        if (!gameStarted) {
 
-        playerOneName = document.getElementById("player1").value;
-        playerTwoName = document.getElementById("player2").value;
+            playerOneName = document.getElementById("player1").value;
+            playerTwoName = document.getElementById("player2").value;
 
-        game = GameController(playerOneName, playerTwoName);
-        updateScreen()
+            game = GameController(playerOneName, playerTwoName);
+            updateScreen()
 
-        document.getElementById("player1").value = "";
-        document.getElementById("player2").value = "";
+            document.getElementById("player1").value = "";
+            document.getElementById("player2").value = "";
 
+             gameStarted = true;
+             Btn.textContent = "Reset Game"
+        } else {
+            game.resetGame();
+            updateScreen();
+            gameStarted = false;
+            Btn.textContent = "Start Game"
+        }
     }) 
 
     //event listner for clicking game board
@@ -234,11 +245,6 @@ function DisplayController (){
     }
     boardDiv.addEventListener("click", clickBoard)
 
-    // event listener for reset button
-    resetBtn.addEventListener("click", () => {
-        game.resetGame();
-        updateScreen()
-})
 
     //inital display 
     updateScreen();
