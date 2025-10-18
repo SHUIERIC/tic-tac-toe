@@ -62,8 +62,8 @@ function GameController (playerOne, playerTwo) {
     const board = Gameboard();
 
     const players = [
-        {name: playerOne, token: 1},
-        {name: playerTwo, token: 2}
+        {name: playerOne, token: "O"},
+        {name: playerTwo, token: "X"}
     ]
 
     let activePlayer = players[0];
