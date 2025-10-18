@@ -1,3 +1,33 @@
+body {
+  font-family: sans-serif, system-ui;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+#playerForm {
+  display: flex;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+#playerForm label {
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+}
+
+#playerForm button {
+  padding: 0.3rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
 .board {
   display: grid;
   height: 500px;
@@ -18,5 +48,28 @@
   font-size: 2rem;
   border: 1px solid grey;
   background: lightyellow;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cell:hover {
+  background: #f8f9ff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.turn {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  min-height: 30px;
+}
+
+.resetBtn {
+  padding: 0.3rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
   cursor: pointer;
 }

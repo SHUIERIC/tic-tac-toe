@@ -27,7 +27,14 @@ function Gameboard () {
         console.log(boardWithCellValues)
     }
 
-    return {getBoard, putToken, printBoard}
+    //reset board 
+    const resetBoard = () => {
+       board.forEach(row => {
+        row.forEach(cell => cell.resetValue(0))
+       })
+    }
+
+    return {getBoard, putToken, printBoard, resetBoard}
 }
 
 // cell value 
@@ -42,12 +49,16 @@ function Cell () {
     //return value of a cell
     const getValue = () => value;
 
-    return {addToken, getValue}
+    //reset cell value to zero
+    const resetValue = (newValue) => value = newValue
+
+    return {addToken, getValue, resetValue}
 } 
 
 // game logic 
 function GameController (playerOne, playerTwo) {
     
+    const form = document.getElementById("playerForm")
     const board = Gameboard();
 
     const players = [
@@ -135,9 +146,19 @@ function GameController (playerOne, playerTwo) {
     //default starting status 
     printNewRound();
 
+    // reset logic 
+    const resetGame = () => {
+        board.resetBoard()
+        activePlayer = players[0];
+        players[0].name = "";
+        players[1].name = "";
+        console.log("reset game")
+    }
+
     return {playRound, 
             getActivePlayer, 
-            getBoard: board.getBoard
+            getBoard: board.getBoard,
+            resetGame
         }
 
 }
@@ -148,6 +169,7 @@ function DisplayController (){
     const turnDiv = document.querySelector(".turn");
     const boardDiv = document.querySelector(".board")
     const form = document.getElementById("playerForm")
+    const resetBtn = document.querySelector(".resetBtn")
 
      
     const updateScreen = () => {
@@ -156,7 +178,11 @@ function DisplayController (){
         const board = game.getBoard();
         const activePlayer = game.getActivePlayer();
 
-        turnDiv.textContent = `${activePlayer.name}'s turn`
+        if (!activePlayer || !activePlayer.name) {
+            turnDiv.textContent = `Waiting for player names`
+        } else {
+            turnDiv.textContent = `${activePlayer.name}'s turn`
+        }
 
         board.forEach ((row, rowIndex) => {
             row.forEach((cell, columnIndex) => {
@@ -184,7 +210,9 @@ function DisplayController (){
         game = GameController(playerOneName, playerTwoName);
         updateScreen()
 
-        form.style.display = "none"
+        document.getElementById("player1").value = "";
+        document.getElementById("player2").value = "";
+
     }) 
 
     //event listner for clicking game board
@@ -204,8 +232,13 @@ function DisplayController (){
             turnDiv.textContent= "It is a tie!"
         }
     }
-
     boardDiv.addEventListener("click", clickBoard)
+
+    // event listener for reset button
+    resetBtn.addEventListener("click", () => {
+        game.resetGame();
+        updateScreen()
+})
 
     //inital display 
     updateScreen();
